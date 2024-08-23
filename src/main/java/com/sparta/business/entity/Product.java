@@ -1,11 +1,13 @@
-package entity;
+package com.sparta.business.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -21,22 +23,28 @@ import org.hibernate.annotations.SQLDelete;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
 @Builder
-@Table(name = "p_payment")
-@SQLDelete(sql = "UPDATE p_payment SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
-public class Payment extends Auditing{
+@Table(name = "p_product")
+@SQLDelete(sql = "UPDATE p_product SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
+public class Product extends Auditing{
 
     @Id
     @GeneratedValue
-    @Column(name = "payment_id")
+    @Column(name = "product_id")
     private UUID id;
 
-    @Column(name = "payment_price", nullable = false)
-    private Long paymentPrice;
+    @Column(name = "name", nullable = false)
+    private String name;
 
-    @Column(name = "payment_method", columnDefinition = "boolean default true")
-    private Boolean paymentMethod = true;
+    @Column(name = "price", nullable = false)
+    private Long price;
+
+    @Column(name = "content")
+    private String content;
 
     @Column(name = "is_public", columnDefinition = "boolean default true")
     private Boolean is_public = true;
+
+    @OneToMany(mappedBy = "product")
+    private List<OrderProduct> orderProductList = new ArrayList<>();
 
 }
