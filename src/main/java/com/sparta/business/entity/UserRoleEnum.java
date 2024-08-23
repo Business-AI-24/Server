@@ -1,4 +1,4 @@
-package entity;
+package com.sparta.business.entity;
 
 import jakarta.persistence.GeneratedValue;
 import lombok.AllArgsConstructor;

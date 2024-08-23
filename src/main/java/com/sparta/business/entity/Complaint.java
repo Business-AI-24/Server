@@ -1,4 +1,4 @@
-package entity;
+package com.sparta.business.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
@@ -16,7 +16,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.SQLDelete;
 
 @Entity
 @Getter
@@ -24,12 +24,13 @@ import org.hibernate.annotations.ColumnDefault;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
 @Builder
-@Table(name = "p_notice")
-public class Notice{
+@Table(name = "p_complaint")
+@SQLDelete(sql = "UPDATE p_complaint SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
+public class Complaint extends Auditing{
 
     @Id
     @GeneratedValue
-    @Column(name = "notice_id")
+    @Column(name = "complaint_id")
     private UUID id;
 
     @Column(name = "title", nullable = false)
@@ -45,4 +46,5 @@ public class Notice{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
 }
