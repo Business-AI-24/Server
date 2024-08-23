@@ -40,14 +40,14 @@ public class Order extends Auditing{
     @Column(name = "total_price", nullable = false)
     private Long totalPrice;
 
-    @Column(name = "address", nullable = false)
-    private String address;
-
     @Column(name = "request", nullable = false)
     private String request;
 
     @Column(name = "is_public", columnDefinition = "boolean default true")
     private Boolean is_public = true;
+
+    @Column(name = "status", columnDefinition = "boolean default true")
+    private Boolean status = true;
 
     @OneToMany(mappedBy = "order")
     private List<OrderProduct> orderProductList = new ArrayList<>();
@@ -60,5 +60,10 @@ public class Order extends Auditing{
     @OneToOne
     @JoinColumn(name = "payment_id")
     private Payment payment;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id")
+    private Store store;
 
 }

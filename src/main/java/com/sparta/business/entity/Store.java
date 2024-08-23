@@ -53,10 +53,6 @@ public class Store extends Auditing{
     @Column(name = "is_open", columnDefinition = "boolean default true")
     private Boolean is_open = true;
 
-    @Column(name = "category", nullable = false)
-    @Enumerated(value = EnumType.STRING)
-    private StoreCategoryEnum role;
-
     @OneToMany(mappedBy = "store")
     private List<Review> reviewList = new ArrayList<>();
 
@@ -67,4 +63,15 @@ public class Store extends Auditing{
 
     @OneToMany(mappedBy = "store")
     private List<Product> productList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "store")
+    private List<Order> orderList = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "region_id")
+    private Region region;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 }

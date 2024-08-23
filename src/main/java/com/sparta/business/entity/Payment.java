@@ -32,6 +32,12 @@ public class Payment extends Auditing{
     @Column(name = "payment_price", nullable = false)
     private Long paymentPrice;
 
+    @Column(name = "pg_name", nullable = false)
+    private String pg_name;
+
+    @Column(name = "transaction_id", nullable = false)
+    private String transactionID;
+
     @Column(name = "payment_method", columnDefinition = "boolean default true")
     private Boolean paymentMethod = true;
 

@@ -42,6 +42,9 @@ public class User extends Auditing{
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "address", nullable = false)
+    private String address;
+
     @Column(name = "is_public", columnDefinition = "boolean default true")
     private Boolean is_public = true;
 
