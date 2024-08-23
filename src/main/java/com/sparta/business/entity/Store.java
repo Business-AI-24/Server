@@ -1,4 +1,4 @@
-package entity;
+package com.sparta.business.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
