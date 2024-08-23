@@ -64,4 +64,7 @@ public class Store extends Auditing{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "store")
+    private List<Product> productList = new ArrayList<>();
 }
