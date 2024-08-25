@@ -1,7 +1,10 @@
 package com.sparta.business.entity;
 
+import com.sparta.business.domain.common.dto.SignUpRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -48,9 +51,9 @@ public class User extends Auditing{
     @Column(name = "is_public", columnDefinition = "boolean default true")
     private Boolean is_public = true;
 
-    @OneToOne
-    @JoinColumn(name = "role_id")
-    private Role role;
+    @Column(name = "role", nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private UserRoleEnum role;
 
     @OneToMany(mappedBy = "user")
     private List<Notice> noticeList = new ArrayList<>();
@@ -66,5 +69,13 @@ public class User extends Auditing{
 
     @OneToMany(mappedBy = "user")
     private List<Order> orderList = new ArrayList<>();
+
+    public User(SignUpRequestDto requestDto, String password, UserRoleEnum role) {
+        this.username = requestDto.getUsername();
+        this.nickname = requestDto.getNickname();
+        this.address = requestDto.getAddress();
+        this.password = password;
+        this.role = role;
+    }
 }
 
