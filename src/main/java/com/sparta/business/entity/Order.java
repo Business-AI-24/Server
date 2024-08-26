@@ -34,7 +34,7 @@ public class Order extends Auditing{
 
     @Id
     @GeneratedValue
-    @Column(name = "product_id")
+    @Column(name = "order_id")
     private UUID id;
 
     @Column(name = "total_price", nullable = false)
