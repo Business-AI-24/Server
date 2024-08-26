@@ -1,10 +1,7 @@
 package com.sparta.business.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 
 @Entity
@@ -25,8 +23,9 @@ import org.hibernate.annotations.SQLDelete;
 public class Payment extends Auditing{
 
     @Id
-    @GeneratedValue
-    @Column(name = "payment_id")
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "payment_id",columnDefinition = "UUID")
     private UUID id;
 
     @Column(name = "payment_price", nullable = false)
