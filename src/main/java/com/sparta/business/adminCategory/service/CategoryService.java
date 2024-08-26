@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
@@ -78,6 +79,27 @@ public class CategoryService {
 
         return ResponseEntity.ok("카테고리가 성공적으로 수정되었습니다.");
 
+    }
+    @Transactional
+    public ResponseEntity<String> deleteCategory(UUID categoryId, String username) {
+
+        //사용자 정보 가져옴
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("로그인 후 삭제하세요"));
+
+        //권한 확인
+        if (!UserRoleEnum.MASTER.equals(user.getRole())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("삭제 권한이 없습니다.");
+        }
+
+        // 카테고리 삭제 로직
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new EntityNotFoundException("카테고리를 찾을 수 없습니다."));
+
+        // 카테고리 삭제 로직
+        categoryRepository.delete(category);
+        //
+        return  ResponseEntity.ok("카테고리가 삭제처리되었습니다.");
     }
 }
 

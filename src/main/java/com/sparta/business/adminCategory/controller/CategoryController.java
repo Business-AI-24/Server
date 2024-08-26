@@ -52,6 +52,23 @@ public class CategoryController {
 
     }
 
+    //카테고리 삭제
+    @DeleteMapping("/categories/{category_id}")
+    public ResponseEntity<String> deleteCategory(
+            @PathVariable UUID category_id,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ){
+
+        //로그인한 사용자의 ID 얻는 방법
+        String username = userDetails.getUsername();
+
+        System.out.println("categoryId: " + category_id);
+        System.out.println("user: " + username);
+
+        return categoryService.deleteCategory(category_id,username);
+
+    }
+
 
 
     }

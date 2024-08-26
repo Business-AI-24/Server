@@ -21,7 +21,7 @@ import org.hibernate.annotations.SQLDelete;
 @NoArgsConstructor
 @Builder
 @Table(name = "p_category")
-@SQLDelete(sql = "UPDATE p_category SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
+@SQLDelete(sql = "UPDATE p_category SET deleted_at = CURRENT_TIMESTAMP WHERE category_id = ?")
 public class Category extends Auditing{
 
     @Id
