@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,6 +23,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
+
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
@@ -100,6 +103,11 @@ public class CategoryService {
         categoryRepository.delete(category);
         //
         return  ResponseEntity.ok("카테고리가 삭제처리되었습니다.");
+    }
+
+
+    public List<Category> getCategories() {
+    return categoryRepository.findAllActiveCategories(); // 모든 카테고리 조회
     }
 }
 
