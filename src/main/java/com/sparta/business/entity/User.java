@@ -77,5 +77,10 @@ public class User extends Auditing{
         this.password = password;
         this.role = role;
     }
+
+    public void addComplaint(Complaint complaint) {
+        complaintList.add(complaint);
+        complaint.setUser(this);
+    }
 }
 
