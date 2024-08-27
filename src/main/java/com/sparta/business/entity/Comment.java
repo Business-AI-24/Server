@@ -1,5 +1,6 @@
 package com.sparta.business.entity;
 
+import com.sparta.business.domain.master.dto.CommentRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,6 +15,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Getter
@@ -25,7 +27,8 @@ import lombok.Setter;
 public class Comment {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "comment_id")
     private UUID id;
 
@@ -42,4 +45,15 @@ public class Comment {
     @JoinColumn(name = "complaint_id")
     private Complaint complaint;
 
+    public Comment(CommentRequestDto requestDto, Complaint complaint) {
+        this.title = requestDto.getTitle();
+        this.content = requestDto.getContent();
+        this.complaint = complaint;
+    }
+
+    public void update(CommentRequestDto requestDto) {
+        this.title = requestDto.getTitle();
+        this.content = requestDto.getContent();
+        this.is_public = requestDto.getIs_public();
+    }
 }

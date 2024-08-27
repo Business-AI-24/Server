@@ -4,6 +4,7 @@ import com.sparta.business.filter.UserDetailsImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -29,6 +30,15 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException exc) {
         log.error("Illegal argument exception: " + exc.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exc.getMessage());
+    }
+
+    /**
+     * 접근 권한 에러 처리
+     */
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<String> handleAccessDeniedException(AccessDeniedException exc) {
+        log.error("Access denied: " + exc.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exc.getMessage());
     }
 
 }
