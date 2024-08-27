@@ -1,5 +1,6 @@
 package com.sparta.business.entity;
 
+import com.sparta.business.domain.master_customer.dto.UserOrderRequestDto;
 import jakarta.persistence.*;
 
 import java.util.UUID;
@@ -19,7 +20,7 @@ import org.hibernate.annotations.SQLDelete;
 @NoArgsConstructor
 @Builder
 @Table(name = "p_payment")
-@SQLDelete(sql = "UPDATE p_payment SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
+@SQLDelete(sql = "UPDATE p_payment SET deleted_at = CURRENT_TIMESTAMP WHERE payment_id = ?")
 public class Payment extends Auditing{
 
     @Id
@@ -28,7 +29,7 @@ public class Payment extends Auditing{
     @Column(name = "payment_id",columnDefinition = "UUID")
     private UUID id;
 
-    @Column(name = "payment_price", nullable = false)
+    @Column(name = "payment_price")
     private Long paymentPrice;
 
     @Column(name = "pg_name", nullable = false)
@@ -43,4 +44,9 @@ public class Payment extends Auditing{
     @Column(name = "is_public", columnDefinition = "boolean default true")
     private Boolean is_public = true;
 
+    public Payment(UserOrderRequestDto requestDto) {
+        this.pg_name = requestDto.getPgName();
+        this.transactionID = requestDto.getTransactionID();
+        this.paymentPrice = 0L;
+    }
 }

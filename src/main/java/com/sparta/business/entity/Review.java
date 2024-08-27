@@ -2,6 +2,7 @@ package com.sparta.business.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sparta.business.domain.master_customer.dto.UserReviewRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -17,7 +18,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 
 @Entity
@@ -27,11 +28,12 @@ import org.hibernate.annotations.SQLDelete;
 @NoArgsConstructor
 @Builder
 @Table(name = "p_review")
-@SQLDelete(sql = "UPDATE p_review SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
+@SQLDelete(sql = "UPDATE p_review SET deleted_at = CURRENT_TIMESTAMP WHERE review_id = ?")
 public class Review extends Auditing{
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "review_id")
     private UUID id;
 
@@ -54,4 +56,17 @@ public class Review extends Auditing{
     @JoinColumn(name = "store_id")
     private Store store;
 
+    public Review(UserReviewRequestDto requestDto, Store store, User user) {
+        this.rating = requestDto.getRating();
+        this.comment = requestDto.getComment();
+        this.store = store;
+        this.user = user;
+        store.getReviewList().add(this);
+//        user.getReviewList().add(this);
+    }
+
+    public void update(UserReviewRequestDto requestDto) {
+        this.rating = requestDto.getRating();
+        this.comment = requestDto.getComment();
+    }
 }
