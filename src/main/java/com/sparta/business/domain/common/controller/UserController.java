@@ -1,7 +1,9 @@
 package com.sparta.business.domain.common.controller;
 
+import com.sparta.business.adminCategory.service.CategoryService;
 import com.sparta.business.domain.common.dto.*;
 import com.sparta.business.domain.common.service.UserService;
+import com.sparta.business.entity.Category;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -20,6 +23,7 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
+    private final CategoryService categoryService;
 
     @PostMapping("/sign_up")
     public ResponseEntity<String> signup(@Valid @RequestBody SignUpRequestDto requestDto) {
@@ -71,4 +75,10 @@ public class UserController {
     }
 
 
+    //카테고리 조회
+    @GetMapping("/categories")
+    public ResponseEntity<List<Category>> getCategories(){
+        List<Category> categories = categoryService.getCategories();
+        return ResponseEntity.ok(categories);
+    }
 }
