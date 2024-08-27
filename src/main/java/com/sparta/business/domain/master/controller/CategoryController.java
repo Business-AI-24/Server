@@ -1,8 +1,8 @@
-package com.sparta.business.adminCategory.controller;
+package com.sparta.business.domain.master.controller;
 
-import com.sparta.business.adminCategory.dto.CategoryEditRequestDto;
-import com.sparta.business.adminCategory.dto.CategoryRequestDto;
-import com.sparta.business.adminCategory.service.CategoryService;
+import com.sparta.business.domain.master.dto.CategoryEditRequestDto;
+import com.sparta.business.domain.master.dto.CategoryRequestDto;
+import com.sparta.business.domain.master.service.CategoryService;
 import com.sparta.business.filter.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package com.sparta.business.adminCategory.dto;
+package com.sparta.business.domain.master.dto;
 
 import lombok.*;
 

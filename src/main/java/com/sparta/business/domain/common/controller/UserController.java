@@ -1,6 +1,6 @@
 package com.sparta.business.domain.common.controller;
 
-import com.sparta.business.adminCategory.service.CategoryService;
+import com.sparta.business.domain.master.service.CategoryService;
 import com.sparta.business.domain.common.dto.*;
 import com.sparta.business.domain.common.service.UserService;
 import com.sparta.business.entity.Category;

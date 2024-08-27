@@ -1,7 +1,7 @@
-package com.sparta.business.adminCategory.service;
+package com.sparta.business.domain.master.service;
 
-import com.sparta.business.adminCategory.dto.CategoryEditRequestDto;
-import com.sparta.business.adminCategory.repository.CategoryRepository;
+import com.sparta.business.domain.master.dto.CategoryEditRequestDto;
+import com.sparta.business.domain.master.repository.CategoryRepository;
 import com.sparta.business.domain.common.repository.UserRepository;
 import com.sparta.business.entity.Category;
 import com.sparta.business.entity.User;
