@@ -1,6 +1,7 @@
 package com.sparta.business.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sparta.business.domain.master.dto.NoticeRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -16,6 +17,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.SQLDelete;
 
 @Entity
 @Getter
@@ -24,10 +27,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 @Table(name = "p_notice")
-public class Notice{
+@SQLDelete(sql = "UPDATE p_notice SET deleted_at = CURRENT_TIMESTAMP WHERE notice_id = ?")
+public class Notice extends Auditing{
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "notice_id")
     private UUID id;
 
@@ -44,4 +49,16 @@ public class Notice{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public Notice(NoticeRequestDto requestDto, User user) {
+        this.title = requestDto.getTitle();
+        this.content = requestDto.getContent();
+        this.user = user;
+    }
+
+    public void update(NoticeRequestDto requestDto) {
+        this.title = requestDto.getTitle();
+        this.content = requestDto.getContent();
+        this.is_public = requestDto.getIs_public();
+    }
 }
