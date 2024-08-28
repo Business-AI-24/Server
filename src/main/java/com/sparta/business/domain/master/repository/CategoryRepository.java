@@ -1,4 +1,4 @@
-package com.sparta.business.adminCategory.repository;
+package com.sparta.business.domain.master.repository;
 
 import com.sparta.business.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
