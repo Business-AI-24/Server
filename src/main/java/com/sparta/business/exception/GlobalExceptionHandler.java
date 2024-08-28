@@ -14,13 +14,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public void ExHandler(Exception e) {
-        log.error(e.toString()); // 로그에 예외 정보 출력
-        e.printStackTrace(); // 콘솔에 예외 스택 트레이스를 출력
+    public ResponseEntity<String> handleException(Exception e) {
+        log.error("Unexpected error occurred: " + e.toString()); // 로그에 예외 정보 및 메세지 출력
+        log.error("Error message: " + e.getMessage()); // 로그에 메시지만 출력
+//        e.printStackTrace(); // 콘솔에 예외 스택 트레이스를 출력(빨간색), 기본 하얀색 에러는 인텔리제이 자체에서 반환
 
-        String errorMessage = e.getMessage();
-        log.error("Error message: " + errorMessage);
-
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
 
     /**
