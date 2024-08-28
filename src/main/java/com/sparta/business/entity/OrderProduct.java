@@ -16,6 +16,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 
 @Entity
@@ -25,11 +26,12 @@ import org.hibernate.annotations.SQLDelete;
 @NoArgsConstructor
 @Builder
 @Table(name = "p_order_product")
-@SQLDelete(sql = "UPDATE p_order_product SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
+@SQLDelete(sql = "UPDATE p_order_product SET deleted_at = CURRENT_TIMESTAMP WHERE order_product_id = ?")
 public class OrderProduct extends Auditing{
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "order_product_id")
     private UUID id;
 

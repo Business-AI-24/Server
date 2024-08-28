@@ -1,6 +1,8 @@
 package com.sparta.business.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sparta.business.domain.master_customer.dto.UserOrderRequestDto;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -20,6 +22,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 
 @Entity
@@ -29,11 +32,12 @@ import org.hibernate.annotations.SQLDelete;
 @NoArgsConstructor
 @Builder
 @Table(name = "p_order")
-@SQLDelete(sql = "UPDATE p_order SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
+@SQLDelete(sql = "UPDATE p_order SET deleted_at = CURRENT_TIMESTAMP WHERE order_id = ?")
 public class Order extends Auditing{
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "order_id")
     private UUID id;
 
@@ -57,7 +61,7 @@ public class Order extends Auditing{
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "payment_id")
     private Payment payment;
 
@@ -65,5 +69,15 @@ public class Order extends Auditing{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
     private Store store;
+
+    public Order(UserOrderRequestDto requestDto, Store store, User user, Payment payment) {
+        this.totalPrice = 0L;
+        this.request = requestDto.getRequest();
+        this.store = store;
+        this.user = user;
+        this.payment = payment;
+//        user.getOrderList().add(this);
+        store.getOrderList().add(this);
+    }
 
 }

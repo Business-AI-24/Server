@@ -1,6 +1,7 @@
 package com.sparta.business.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sparta.business.domain.master_customer.dto.UserComplaintsRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -26,7 +27,7 @@ import org.hibernate.annotations.SQLDelete;
 @NoArgsConstructor
 @Builder
 @Table(name = "p_complaint")
-@SQLDelete(sql = "UPDATE p_complaint SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
+@SQLDelete(sql = "UPDATE p_complaint SET deleted_at = CURRENT_TIMESTAMP WHERE complaint_id = ?")
 public class Complaint extends Auditing{
 
     @Id
@@ -49,4 +50,10 @@ public class Complaint extends Auditing{
     @JoinColumn(name = "user_id")
     private User user;
 
+    public Complaint(UserComplaintsRequestDto requestDto, User user) {
+        this.title = requestDto.getTitle();
+        this.content = requestDto.getContent();
+        this.user = user;
+//        user.getComplaintList().add(this);
+    }
 }
