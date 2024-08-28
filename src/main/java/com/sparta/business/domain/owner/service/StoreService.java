@@ -1,14 +1,13 @@
 package com.sparta.business.domain.owner.service;
 
+import com.sparta.business.domain.common.repository.OrderRepository;
 import com.sparta.business.domain.common.repository.StoreRepository;
 import com.sparta.business.domain.common.repository.UserRepository;
 import com.sparta.business.domain.master.repository.CategoryRepository;
+import com.sparta.business.domain.master.repository.RegionRepository;
 import com.sparta.business.domain.owner.dto.StoreEditRequestDto;
 import com.sparta.business.domain.owner.dto.StoreRequestDto;
-import com.sparta.business.entity.Category;
-import com.sparta.business.entity.Store;
-import com.sparta.business.entity.User;
-import com.sparta.business.entity.UserRoleEnum;
+import com.sparta.business.entity.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +27,10 @@ public class StoreService {
     private CategoryRepository categoryRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private RegionRepository regionRepository;
+    @Autowired
+    private OrderRepository orderRepository;
 
 
     @Transactional
@@ -44,8 +47,8 @@ public class StoreService {
         }
 
         // Region 및 Category 조회
-//        Region region = regionRepository.findById(storeRequestDto.getRegionId())
-//                .orElseThrow(() -> new RuntimeException("Region not found"));
+        Region region = regionRepository.findById(storeRequestDto.getRegionId())
+                .orElseThrow(() -> new RuntimeException("Region not found"));
         Category category = categoryRepository.findById(storeRequestDto.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
@@ -54,7 +57,7 @@ public class StoreService {
                 .name(storeRequestDto.getName())
                 .address(storeRequestDto.getAddress())
                 .phoneNumber(storeRequestDto.getPhoneNumber())
-//                .region(region)
+               .region(region)
                 .category(category)
                 .user(user)
                 .build();
@@ -94,7 +97,7 @@ public class StoreService {
         store.setAddress(storeEditRequestDto.getAddress());
         store.setPhoneNumber(storeEditRequestDto.getPhoneNumber());
         store.setCategory(category);
-        // store.setRegion(region); // 필요시 지역 수정 추가
+         //store.setRegion(region); // 필요시 지역 수정 추가
         // store.setUser(user); // 사용자는 수정하지 않는다고 가정
         storeRepository.save(store);
         return ResponseEntity.ok("상점정보가 성공적으로 업데이트되었습니다.");
@@ -120,6 +123,39 @@ public class StoreService {
         return ResponseEntity.ok("상점이 삭제처리되었습니다.");
 
     }
+
+
+    public ResponseEntity<String> rejectOrder(String username, UUID orderId) {
+
+        //사용자 정보 가져옴
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        //권한 확인
+        if(!UserRoleEnum.OWNER.equals(user.getRole())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("주문 거절 권한이 없습니다.");
+        }
+
+        //주문 건에 대한 정보 조회
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("해당하는 주문이 존재하지 않습니다."));
+
+
+        //상점 조회
+        Store store=order.getStore();
+
+        //사용자가 order를 거절할 수 있는 상점의 소유자 인지 확인
+
+        if(!store.getUser().equals(user)){
+            return ResponseEntity.status(403).body("주문을 거절할 수 있는 권한이 없습니다.");
+        }
+
+        //주문 거절 로직
+        orderRepository.delete(order);
+
+        return ResponseEntity.ok("상품이 성공적으로 삭제되었습니다.");
+    }
+
 
 
 

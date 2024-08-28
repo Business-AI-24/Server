@@ -31,8 +31,8 @@ public class ProductController {
 
         //인증된 사용자 정보 가져오기
         User user = userDetails.getUser();
-        System.out.println("productRequestDto: " + productRequestDto);
-        System.out.println("user: " + user);
+        log.info("productRequestDto: {}", productRequestDto);
+        log.info("user: {}", user);
 
 
         return productService.addProduct(productRequestDto,user);
@@ -42,13 +42,14 @@ public class ProductController {
     //메뉴 수정
     @PutMapping("/product/{product_id}")
     public ResponseEntity<String> updateProduct(
+            @PathVariable UUID product_id,
             @RequestBody ProductEditRequestDto productEditRequestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         System.out.println("productEditRequestDto: " + productEditRequestDto);
         System.out.println("userDetails: " + userDetails);
 
-        return productService.updateProduct(productEditRequestDto,userDetails.getUser());
+        return productService.updateProduct(product_id,productEditRequestDto,userDetails.getUser());
     }
 
     //메뉴 삭제
@@ -56,6 +57,7 @@ public class ProductController {
     public ResponseEntity<String> hideProduct(
             @PathVariable UUID product_id,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
         //로그인한 사용자의 ID
         String username = userDetails.getUsername();
 

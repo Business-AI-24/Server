@@ -1,8 +1,9 @@
 package com.sparta.business.domain.master.service;
 
-import com.sparta.business.domain.common.repository.NoticeRepository;
+
 import com.sparta.business.domain.master.dto.NoticeRequestDto;
 import com.sparta.business.domain.master.dto.NoticeResponseDto;
+import com.sparta.business.domain.master.repository.NoticeRepository;
 import com.sparta.business.entity.Notice;
 import com.sparta.business.entity.User;
 import java.util.UUID;

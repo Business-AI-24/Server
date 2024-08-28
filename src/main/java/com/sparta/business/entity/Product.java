@@ -28,7 +28,7 @@ import org.hibernate.annotations.SQLDelete;
 @NoArgsConstructor
 @Builder
 @Table(name = "p_product")
-@SQLDelete(sql = "UPDATE p_product SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
+@SQLDelete(sql = "UPDATE p_product SET deleted_at = CURRENT_TIMESTAMP WHERE product_id = ?")
 public class Product extends Auditing{
 
     @Id

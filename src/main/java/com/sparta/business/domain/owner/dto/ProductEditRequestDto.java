@@ -16,4 +16,5 @@ public class ProductEditRequestDto {
     private Long productPrice;
     private String productCategory;
     private UUID storeId;
+    private UUID productId;
 }

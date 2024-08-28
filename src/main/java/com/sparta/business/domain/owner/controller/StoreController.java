@@ -2,10 +2,13 @@ package com.sparta.business.domain.owner.controller;
 
 
 
+import com.sparta.business.domain.master_customer.dto.UserOrderResponseDto;
 import com.sparta.business.domain.owner.dto.StoreEditRequestDto;
 import com.sparta.business.domain.owner.dto.StoreRequestDto;
 import com.sparta.business.domain.owner.service.StoreService;
 
+import com.sparta.business.entity.User;
+import com.sparta.business.entity.UserRoleEnum;
 import com.sparta.business.filter.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +31,7 @@ import java.util.UUID;
 public class StoreController {
 
     @Autowired
-    private StoreService storeService;
+    private final StoreService storeService;
 
     // 상점 등록
     @PostMapping("/store")
@@ -78,12 +82,25 @@ public class StoreController {
 
     }
 
-//    //음식점 주문 거절
-//    @PutMapping("/store/{order_id}/reject")
-//    public ResponseEntity<String> rejectStore(){
-//
-//        return null;
-//    }
+
+    //음식점 주문 거절
+    @DeleteMapping("/order/{order_id}/reject")
+
+    public ResponseEntity<String> rejectOrder(
+            @PathVariable UUID order_id,
+            @AuthenticationPrincipal UserDetailsImpl userDetails){
+        //로그인한 사용자의 ID
+
+        String username = userDetails.getUsername();
+
+        System.out.println("username: " + username);
+        System.out.println("order_id: " + order_id);
+
+
+        return storeService.rejectOrder(username,order_id);
+    }
+
+
 
 
 }

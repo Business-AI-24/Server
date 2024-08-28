@@ -71,7 +71,7 @@ public class CategoryService {
             return ResponseEntity.status(403).body("권한이 없습니다.");
         }
 
-        // 카테고리 수정 로직
+        // 카테고리 수정 조회
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new EntityNotFoundException("카테고리를 찾을 수 없습니다."));
 
@@ -95,7 +95,7 @@ public class CategoryService {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("삭제 권한이 없습니다.");
         }
 
-        // 카테고리 삭제 로직
+        // 카테고리 조회
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new EntityNotFoundException("카테고리를 찾을 수 없습니다."));
 
