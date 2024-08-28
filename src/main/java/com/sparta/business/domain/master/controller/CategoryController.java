@@ -28,8 +28,7 @@ public class CategoryController {
             @RequestBody CategoryRequestDto categoryRequestDto ,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         String categoryType = categoryRequestDto.getCategoryType();
-        System.out.println("categoryTypes: " + categoryType);
-        System.out.println("userDetails: " + userDetails);
+
         return categoryService.addCategory(categoryType,userDetails.getUser());
 
     }
@@ -43,10 +42,7 @@ public class CategoryController {
            {
                //로그인한 사용자의 ID를 얻는 방법
              String username = userDetails.getUsername();
-//             String categoryType = categoryEditRequestDto.getCategoryType();
-        System.out.println("categoryEditRequestDto: " + categoryEditRequestDto);
-        System.out.println("user: " + username);
-        System.out.println("category_id: " + category_id);
+
                return categoryService.updateCategory(category_id, categoryEditRequestDto, username);
 
 
@@ -62,8 +58,6 @@ public class CategoryController {
         //로그인한 사용자의 ID 얻는 방법
         String username = userDetails.getUsername();
 
-        System.out.println("categoryId: " + category_id);
-        System.out.println("user: " + username);
 
         return categoryService.deleteCategory(category_id,username);
 
