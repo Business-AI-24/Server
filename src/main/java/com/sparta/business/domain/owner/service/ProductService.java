@@ -10,7 +10,6 @@ import com.sparta.business.entity.Store;
 import com.sparta.business.entity.User;
 import com.sparta.business.entity.UserRoleEnum;
 import jakarta.transaction.Transactional;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -66,6 +65,8 @@ public class ProductService {
         //권한 확인 & 상점 owner 확인
         vaildateUserAndStoreOwnership(user, productRequestDto.getStoreId());
 
+
+        //상점 정보 조회
         Store store = getStore(productRequestDto.getStoreId());
 
         //메뉴 저장
@@ -118,22 +119,16 @@ public class ProductService {
         User user= userRepository.findByUsername(username)
                 .orElseThrow(()->new RuntimeException("사용자가 없습니다."));
 
-        //권한 확인
-        if (!UserRoleEnum.OWNER.equals(user.getRole())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("삭제 권한이 없습니다.");
-        }
-
-        //상품조회
-        Product product= productRepository.findById(productId)
-                .orElseThrow(()->new RuntimeException("삭제하려는 상품이 존재하지 않습니다."));
+        //상품 조회
+        Product product = productRepository.findById(productId)
+                .orElseThrow(()-> new RuntimeException("상품이 존재하지 않습니다."));
 
         //상점 조회
         Store store = product.getStore();
 
-        //사용자가 상점의 소유자인지 확인
-        if (!store.getUser().equals(user)){
-            return ResponseEntity.status(403).body("이 상점의 소유자가 아닙니다.");
-        }
+
+        //권한 및 소유주 조회
+        vaildateUserAndStoreOwnership(user,store.getId());
 
         //메뉴 삭제 로직
         productRepository.delete(product);
