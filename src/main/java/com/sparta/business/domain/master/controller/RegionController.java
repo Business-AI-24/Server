@@ -1,8 +1,5 @@
 package com.sparta.business.domain.master.controller;
 
-import com.sparta.business.adminCategory.dto.CategoryEditRequestDto;
-import com.sparta.business.adminCategory.dto.CategoryRequestDto;
-import com.sparta.business.adminCategory.service.CategoryService;
 import com.sparta.business.domain.master.dto.RegionEditRequestDto;
 import com.sparta.business.domain.master.dto.RegionRequestDto;
 import com.sparta.business.domain.master.dto.RegionResponseDto;
