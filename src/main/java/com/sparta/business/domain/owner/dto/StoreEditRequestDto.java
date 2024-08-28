@@ -13,7 +13,7 @@ public class StoreEditRequestDto {
     private String name;
     private String address;
     private String phoneNumber;
-    //    private UUID regionId;   // Region의 ID
+    private UUID regionId;   // Region의 ID
     private UUID categoryId; // Category의 ID
 
 }
