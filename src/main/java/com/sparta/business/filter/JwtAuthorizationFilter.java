@@ -30,6 +30,14 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(
         HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
 
+        if (req.getRequestURI().startsWith("/common/sign_in") ||
+            req.getRequestURI().startsWith("/common/sign_up") ||
+            req.getRequestURI().equals("/health")) {
+            log.info("Pass Authorization : " + req.getRequestURI());
+            filterChain.doFilter(req, res);
+            return;
+        }
+
         String tokenValue = jwtUtil.getJwtFromHeader(req);
 
         if (StringUtils.hasText(tokenValue)) {
@@ -63,6 +71,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     // 인증 객체 생성
     private Authentication createAuthentication(String username) {
+        log.info("username : " + username);
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }

@@ -1,5 +1,6 @@
 package com.sparta.business.config;
 
+import com.sparta.business.domain.common.repository.UserRepository;
 import com.sparta.business.filter.JwtAuthenticationFilter;
 import com.sparta.business.filter.JwtAuthorizationFilter;
 import com.sparta.business.filter.JwtUtil;
@@ -67,6 +68,7 @@ public class SecurityConfig {
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
                 // /auth/signIn 경로에 대한 접근을 허용합니다. 이 경로는 인증 없이 접근할 수 있습니다.
                 .requestMatchers("/common/**").permitAll()
+                .requestMatchers("/owner/ask/description").permitAll()
                 // 그 외의 모든 요청은 인증이 필요합니다.
                 .anyRequest().authenticated()
             )

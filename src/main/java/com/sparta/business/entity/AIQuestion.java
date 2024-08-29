@@ -21,7 +21,7 @@ import org.hibernate.annotations.SQLDelete;
 @NoArgsConstructor
 @Builder
 @Table(name = "p_ai_question")
-@SQLDelete(sql = "UPDATE p_ai_question SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
+@SQLDelete(sql = "UPDATE p_ai_question SET deleted_at = CURRENT_TIMESTAMP WHERE ai_question_id = ?")
 public class AIQuestion {
 
     @Id
@@ -29,10 +29,10 @@ public class AIQuestion {
     @Column(name = "ai_question_id")
     private UUID id;
 
-    @Column(name = "question", nullable = false)
+    @Column(name = "question", nullable = false, columnDefinition = "TEXT")
     private String question;
 
-    @Column(name = "answer", nullable = false)
+    @Column(name = "answer", nullable = false, columnDefinition = "TEXT")
     private String answer;
 
 }

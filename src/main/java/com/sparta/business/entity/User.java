@@ -1,5 +1,6 @@
 package com.sparta.business.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.business.domain.common.dto.SignUpRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -55,18 +56,23 @@ public class User extends Auditing{
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Notice> noticeList = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Complaint> complaintList = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Review> reviewList = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Store> storeList = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Order> orderList = new ArrayList<>();
 
