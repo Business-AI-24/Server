@@ -31,8 +31,7 @@ public class ProductController {
 
         //인증된 사용자 정보 가져오기
         User user = userDetails.getUser();
-        log.info("productRequestDto: {}", productRequestDto);
-        log.info("user: {}", user);
+
 
 
         return productService.addProduct(productRequestDto,user);
@@ -46,8 +45,6 @@ public class ProductController {
             @RequestBody ProductEditRequestDto productEditRequestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        System.out.println("productEditRequestDto: " + productEditRequestDto);
-        System.out.println("userDetails: " + userDetails);
 
         return productService.updateProduct(product_id,productEditRequestDto,userDetails.getUser());
     }
@@ -60,10 +57,6 @@ public class ProductController {
 
         //로그인한 사용자의 ID
         String username = userDetails.getUsername();
-
-
-        System.out.println("username: " + username);
-        System.out.println("product_id: " + product_id);
 
         return productService.deleteProduct(username,product_id);
     }

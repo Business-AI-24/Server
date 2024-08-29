@@ -1,22 +1,15 @@
 package com.sparta.business.domain.owner.controller;
 
 
-
-import com.sparta.business.domain.master_customer.dto.UserOrderResponseDto;
 import com.sparta.business.domain.owner.dto.StoreEditRequestDto;
 import com.sparta.business.domain.owner.dto.StoreRequestDto;
 import com.sparta.business.domain.owner.service.StoreService;
-
-import com.sparta.business.entity.User;
-import com.sparta.business.entity.UserRoleEnum;
 import com.sparta.business.filter.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -38,15 +31,12 @@ public class StoreController {
     public ResponseEntity<String> createStore(
             @RequestBody StoreRequestDto storeRequestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        String StoreName = storeRequestDto.getName();
-        System.out.println("store 객체: " + storeRequestDto);
-        System.out.println("userDetails: " + userDetails);
 
         try {
             ResponseEntity<String> store = storeService.createStore(storeRequestDto, userDetails.getUser());
-            return ResponseEntity.ok("Store created successfully");
+            return ResponseEntity.ok("상점이 성공적으로 등록되었습니다.");
         } catch (SecurityException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("상품 등록이 실패했습니다.");
         }
     }
 
@@ -59,8 +49,7 @@ public class StoreController {
 
         //로그인한 사용자의 ID를 얻는 방법
         String username = userDetails.getUsername();
-        System.out.println("storeEtitRequestDto: " + storeEditRequestDto);
-        System.out.println("username: " + username);
+
 
         return storeService.updateStore(store_id,storeEditRequestDto,username);
     }
@@ -72,10 +61,6 @@ public class StoreController {
             @AuthenticationPrincipal UserDetailsImpl userDetails){
         //로그인한 사용자의 ID
         String username = userDetails.getUsername();
-
-        System.out.println("username: " + username);
-        System.out.println("store_id: " + store_id);
-
 
 
         return storeService.deleteStore(username,store_id);
@@ -92,9 +77,6 @@ public class StoreController {
         //로그인한 사용자의 ID
 
         String username = userDetails.getUsername();
-
-        System.out.println("username: " + username);
-        System.out.println("order_id: " + order_id);
 
 
         return storeService.rejectOrder(username,order_id);

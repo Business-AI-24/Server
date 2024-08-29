@@ -8,56 +8,57 @@ import com.sparta.business.domain.master.repository.RegionRepository;
 import com.sparta.business.domain.owner.dto.StoreEditRequestDto;
 import com.sparta.business.domain.owner.dto.StoreRequestDto;
 import com.sparta.business.entity.*;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class StoreService {
-    @Autowired
-    private StoreRepository storeRepository;
-    @Autowired
-    private CategoryRepository categoryRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private RegionRepository regionRepository;
-    @Autowired
-    private OrderRepository orderRepository;
+    private final StoreRepository storeRepository;
+    private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
+    private final RegionRepository regionRepository;
+    private final OrderRepository orderRepository;
 
 
+
+    //권한 확인 메서드
+    private void validateOwner(User user) {
+        if(!UserRoleEnum.OWNER.equals(user.getRole())) {
+            throw new AccessDeniedException("접근 권한이 없습니다.");
+        }
+    }
+
+    //사용자 조회 메서드
+    private User getUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다."));
+    }
+
+    //상점 등록
     @Transactional
     public ResponseEntity<String> createStore(StoreRequestDto storeRequestDto, User user) {
         // 권한 확인
-        if (!UserRoleEnum.OWNER.equals(user.getRole())) {
-            return ResponseEntity.status(403).body("등록 권한이 없습니다.");
-        }
+       validateOwner(user);
 
-        // 중복 확인
-        Optional<Store> existingStore = storeRepository.findByName(storeRequestDto.getName());
-        if (existingStore.isPresent()) {
-            return ResponseEntity.badRequest().body("이미 존재하는 상점 이름입니다.");
-        }
 
         // Region 및 Category 조회
         Region region = regionRepository.findById(storeRequestDto.getRegionId())
-                .orElseThrow(() -> new RuntimeException("Region not found"));
+                .orElseThrow(() -> new RuntimeException("지역이 존재하지 않습니다."));
         Category category = categoryRepository.findById(storeRequestDto.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+                .orElseThrow(() -> new RuntimeException("카테고리가 존재하지 않습니다."));
 
         // 상점 저장
         Store store = Store.builder()
                 .name(storeRequestDto.getName())
                 .address(storeRequestDto.getAddress())
                 .phoneNumber(storeRequestDto.getPhoneNumber())
-               .region(region)
+                .region(region)
                 .category(category)
                 .user(user)
                 .build();
@@ -69,14 +70,10 @@ public class StoreService {
     @Transactional
     public ResponseEntity<String> updateStore(UUID storeId, StoreEditRequestDto storeEditRequestDto, String username) {
 
-        //사용자 정보를 가져옴
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        //사용자 정보 조회 및 권한 확인
+        User user = getUserByUsername(username);
+        validateOwner(user);
 
-        //권한 확인
-        if(!UserRoleEnum.OWNER.equals(user.getRole())) {
-            return ResponseEntity.status(403).body("수정 권한이 없습니다.");
-        }
 
         //카테고리 조회
         Category category = categoryRepository.findById(storeEditRequestDto.getCategoryId())
@@ -86,33 +83,28 @@ public class StoreService {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new RuntimeException("Store not found"));
 
-        // 상점 이름 중복 확인 (선택 사항)
-        if (storeRepository.findByName(storeEditRequestDto.getName()).isPresent() &&
-                !store.getName().equals(storeEditRequestDto.getName())) {
-            return ResponseEntity.status(400).body("상점 이름이 이미 존재합니다.");
-        }
+        Region region = regionRepository.findById(storeEditRequestDto.getRegionId())
+                .orElseThrow(() -> new RuntimeException("지역이 존재하지 않습니다."));
 
         // 상점 정보 업데이트
         store.setName(storeEditRequestDto.getName());
         store.setAddress(storeEditRequestDto.getAddress());
         store.setPhoneNumber(storeEditRequestDto.getPhoneNumber());
         store.setCategory(category);
-         //store.setRegion(region); // 필요시 지역 수정 추가
-        // store.setUser(user); // 사용자는 수정하지 않는다고 가정
+        store.setRegion(region); // 필요시 지역 수정 추가
+
         storeRepository.save(store);
         return ResponseEntity.ok("상점정보가 성공적으로 업데이트되었습니다.");
     }
 
+    //삭제
     @Transactional
     public ResponseEntity<String> deleteStore(String username, UUID storeId) {
     // 사용자 정보 가져옴
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = getUserByUsername(username);
+        validateOwner(user);
 
-    //권한 확인
-        if(!UserRoleEnum.OWNER.equals(user.getRole())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("삭제 권한이 없습니다.");
-        }
+
 
         //상접 삭제 로직
         Store store = storeRepository.findById(storeId)
@@ -124,17 +116,15 @@ public class StoreService {
 
     }
 
+    //주문 거절
 
     public ResponseEntity<String> rejectOrder(String username, UUID orderId) {
 
         //사용자 정보 가져옴
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = getUserByUsername(username);
 
         //권한 확인
-        if(!UserRoleEnum.OWNER.equals(user.getRole())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("주문 거절 권한이 없습니다.");
-        }
+        validateOwner(user);
 
         //주문 건에 대한 정보 조회
         Order order = orderRepository.findById(orderId)
