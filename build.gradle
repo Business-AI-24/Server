@@ -29,7 +29,7 @@ ext {
 
 dependencies {
 
-	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+//	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
@@ -63,4 +63,8 @@ dependencyManagement {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+jar{
+	enabled = false
 }
