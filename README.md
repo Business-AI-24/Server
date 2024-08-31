@@ -1,13 +1,9 @@
 # 팀원 역할분담
 ## Domain
-### customer
-인희
-### owner
-민경
-### common
-민기
-### admin
-다같이
+### customer : 인희
+### owner : 민경
+### common : 민기
+### admin : ALL
 
 # 서비스 구성 및 실행 방법
 ![image](https://github.com/user-attachments/assets/8a6d383f-ab31-4bfa-ac65-4cded9f6167d)
@@ -22,7 +18,8 @@ AI 오픈 API 를 이용한 배달 서비스 주문 결제 시스템 백엔드 �
 
 # ERD
 
-![image](https://github.com/user-attachments/assets/9449b9e7-4d2f-44a7-96c4-efbe6628ceed)
+![image](https://github.com/user-attachments/assets/34529fbc-8b0a-4f5f-be31-af863728f9c0)
+
 
 # 기술 스택
 - Spring Boot 3.3.3
